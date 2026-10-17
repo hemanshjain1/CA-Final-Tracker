@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CA Final Study Dashboard</title>
+    <style>
+        :root {
+            --bg-color: #fff1f2; /* Softest Blush Pink */
+            --card-bg: #ffffff;
+            --text-main: #4c0519; /* Deep Rose Accent Black */
+            --text-muted: #9d174d; /* Muted Berry/Pink */
+            --border-color: #fbcfe8; /* Light Pink Border */
+            --fr-color: #ec4899; /* Bright Pink */
+            --dt-color: #f43f5e; /* Rose Pink */
+            --idt-color: #db2777; /* Deep Pink */
+            --audit-color: #f472b6; /* Pastel Pink */
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 16px;
+        }
+
+        .dashboard-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 { margin: 0 0 4px 0; font-size: 1.6rem; color: #831843; }
+        .deadline { margin: 0; color: var(--text-muted); font-weight: 500; font-size: 0.95rem; }
+
+        /* Countdown Widget in Berry Pink Gradient */
+        .countdown-widget {
+            background: linear-gradient(135deg, #9d174d, #831843);
+            color: #ffffff;
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(157, 23, 77, 0.2);
+        }
+        .countdown-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 12px;
+        }
+        .countdown-item {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 10px;
+            border-radius: 6px;
+        }
+        .countdown-num { font-size: 1.3rem; font-weight: 700; color: #fff1f2; }
+        .countdown-label { font-size: 0.75rem; color: #fce7f3; margin-top: 2px; }
+
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .grid-layout { grid-template-columns: 1fr; }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 18px;
+            box-shadow: 0 2px 4px rgba(157, 23, 77, 0.04);
+            border: 1px solid var(--border-color);
+            margin-bottom: 16px;
+        }
+
+        .card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 0 0 16px 0;
+            color: #831843;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        /* Pink Progress Tracking Elements */
+        .subject-row { margin-bottom: 16px; }
+        .subject-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .subject-name { display: flex; align-items: center; gap: 6px; color: #831843; }
+        .subject-stats { color: var(--text-muted); font-size: 0.85rem; }
+
+        .progress-bar-container {
+            background-color: #ffe4e6;
+            border-radius: 8px;
+            height: 12px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        /* Pink Bar Graph */
+        .graph-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            height: 140px;
+            padding-top: 20px;
+            border-bottom: 2px solid var(--border-color);
+        }
+        .graph-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 50px;
+        }
+        .graph-bar {
+            width: 100%;
+            background-color: #fbcfe8;
+            border-radius: 4px 4px 0 0;
+            height: 0%;
+            transition: height 0.1s linear;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        .graph-bar-label {
+            font-size: 0.75rem;
+            color: #ffffff;
+            font-weight: bold;
+            margin-top: 4px;
+        }
+        .graph-name { font-size: 0.8rem; font-weight: 600; margin-top: 6px; color: #831843; }
+
+        /* Smooth Form Elements */
+        .input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px; color: #9d174d; }
+        select, input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 0.9rem;
+            background-color: #fff5f5;
+            color: #4c0519;
+        }
+        select:focus, input:focus {
+            outline: 1px solid var(--fr-color);
+        }
+        button.submit-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #9d174d;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.2s;
+        }
+        button.submit-btn:hover { background-color: #831843; }
+
+        /* Minimal Logs Table */
+        .table-container { max-height: 200px; overflow-y: auto; }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem; }
+        th, td { padding: 8px; border-bottom: 1px solid var(--border-color); }
+        th { background-color: #ffe4e6; font-weight: 600; color: #831843; position: sticky; top: 0; }
+        td { color: #4c0519; }
+        .delete-btn { background: none; border: none; color: #f43f5e; cursor: pointer; font-size: 1.1rem; padding: 0; }
+        .badge { padding: 2px 6px; border-radius: 4px; color: white; font-size: 0.7rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+    <header>
+        <h1>CA Final Preparation Tracker</h1>
+        <p class="deadline">Target Milestone: 31 December</p>
+    </header>
+
+    <!-- Instant Countdown Widget -->
+    <div class="countdown-widget">
+        <div style="font-size: 0.95rem; font-weight: 500;">⏳ Milestone Target Schedule Status</div>
+        <div class="countdown-grid">
+            <div class="countdown-item">
+                <div class="countdown-num" id="days-left">0</div>
+                <div class="countdown-label">Days Remaining</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-num" id="total-left-hours">0</div>
+                <div class="countdown-label">Hours Left</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-num" id="daily-target" style="color: #ffe4e6;">0.0</div>
+                <div class="countdown-label">Hours / Day Needed</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid-layout">
+        <!-- Progress Sections -->
+        <div>
+            <div class="card">
+                <h2 class="card-title">Subject Balance Matrix</h2>
+                
+                <!-- FR -->
+                <div class="subject-row">
+                    <div class="subject-info">
+                        <span class="subject-name"><span class="badge" style="background-color: var(--fr-color)">FR</span> Financial Reporting</span>
+                        <span class="subject-stats" id="fr-stats">0 / 90 Hours</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" id="fr-bar" style="background-color: var(--fr-color)"></div>
+                    </div>
+                </div>
+
+                <!-- DT -->
+                <div class="subject-row">
+                    <div class="subject-info">
+                        <span class="subject-name"><span class="badge" style="background-color: var(--dt-color)">DT</span> Direct Taxes</span>
+                        <span class="subject-stats" id="dt-stats">0 / 120 Hours</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" id="dt-bar" style="background-color: var(--dt-color)"></div>
+                    </div>
+                </div>
+
+                <!-- IDT -->
+                <div class="subject-row">
+                    <div class="subject-info">
+                        <span class="subject-name"><span class="badge" style="background-color: var(--idt-color)">IDT</span> Indirect Taxes</span>
+                        <span class="subject-stats" id="idt-stats">0 / 70 Hours</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" id="idt-bar" style="background-color: var(--idt-color)"></div>
+                    </div>
+                </div>
+
+                <!-- Audit -->
+                <div class="subject-row">
+                    <div class="subject-info">
+                        <span class="subject-name"><span class="badge" style="background-color: var(--audit-color)">AUD</span> Advanced Auditing</span>
+                        <span class="subject-stats" id="audit-stats">0 / 30 Hours</span>
+                    </div>
+                    <div class="progress-bar-container">

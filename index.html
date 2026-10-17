@@ -3,282 +3,364 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CA Final Study Dashboard</title>
+    <title>CA Final Premium Tracker</title>
     <style>
         :root {
-            --bg-color: #fff1f2; 
-            --card-bg: #ffffff;
-            --text-main: #4c0519; 
-            --text-muted: #9d174d; 
-            --border-color: #fbcfe8; 
-            --fr-color: #ec4899; 
-            --dt-color: #f43f5e; 
-            --idt-color: #db2777; 
-            --audit-color: #f472b6; 
+            --bg-gradient: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%);
+            --panel-bg: rgba(255, 255, 255, 0.9);
+            --text-main: #4c0519;
+            --text-muted: #9d174d;
+            --border-pink: #fbcfe8;
+            --fr-color: #ec4899;
+            --dt-color: #f43f5e;
+            --idt-color: #db2777;
+            --audit-color: #f472b6;
+            --shadow-md: 0 10px 25px -5px rgba(131, 24, 67, 0.08);
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%);
+            background: var(--bg-gradient);
+            background-attachment: fixed;
             color: var(--text-main);
             margin: 0;
-            padding: 20px;
+            padding: 24px 16px;
             min-height: 100vh;
+            box-sizing: border-box;
         }
 
-        .dashboard-container {
-            max-width: 900px;
+        .app-container {
+            max-width: 1100px;
             margin: 0 auto;
         }
 
         header {
             text-align: center;
-            margin-bottom: 25px;
-            animation: fadeInDown 0.6s ease-out;
+            margin-bottom: 24px;
         }
 
-        h1 { margin: 0 0 6px 0; font-size: 2rem; color: #831843; font-weight: 800; text-shadow: 0 2px 4px rgba(131, 24, 67, 0.05); }
-        .deadline { margin: 0; color: var(--text-muted); font-weight: 600; font-size: 1rem; background: #ffe4e6; display: inline-block; padding: 4px 16px; border-radius: 20px; }
+        header h1 {
+            margin: 0 0 6px 0;
+            font-size: 2.2rem;
+            color: #831843;
+            font-weight: 800;
+        }
 
-        /* Smooth Floating Widgets */
-        .countdown-widget {
-            background: linear-gradient(135deg, #9d174d 0%, #831843 100%);
+        header p {
+            margin: 0;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .metrics-banner {
+            background: linear-gradient(135deg, #9d174d 0%, #70062c 100%);
             color: #ffffff;
             border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 25px;
-            text-align: center;
-            box-shadow: 0 10px 25px -5px rgba(157, 23, 77, 0.3);
-            animation: fadeInUp 0.6s ease-out;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 30px rgba(131, 24, 67, 0.25);
         }
-        .countdown-grid {
+
+        .metrics-banner-title {
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.05rem;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            color: #ffe4e6;
+        }
+
+        .metrics-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-top: 15px;
-        }
-        .countdown-item {
-            background: rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(4px);
-            padding: 12px;
-            border-radius: 14px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: transform 0.2s;
-        }
-        .countdown-item:hover { transform: translateY(-3px); }
-        .countdown-num { font-size: 1.6rem; font-weight: 800; color: #fff1f2; }
-        .countdown-label { font-size: 0.75rem; color: #fce7f3; font-weight: 500; margin-top: 4px; }
-
-        .grid-layout {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
+            gap: 16px;
         }
 
-        @media (min-width: 768px) {
-            .grid-layout { grid-template-columns: 1.2fr 1fr; }
+        .metric-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 16px 8px;
+            text-align: center;
+            transition: transform 0.2s ease;
         }
 
-        .card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 24px;
-            box-shadow: 0 10px 20px rgba(157, 23, 77, 0.03), 0 2px 6px rgba(157, 23, 77, 0.02);
-            border: 1px solid var(--border-color);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        .card:hover {
+        .metric-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 12px 24px rgba(157, 23, 77, 0.06);
         }
 
-        .card-title {
-            font-size: 1.1rem;
-            font-weight: 700;
+        .metric-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #ffffff;
+            line-height: 1.2;
+        }
+
+        .metric-label {
+            font-size: 0.8rem;
+            color: #fce7f3;
+            font-weight: 600;
+            margin-top: 4px;
+            text-transform: uppercase;
+        }
+
+        .workspace-layout {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 850px) {
+            .workspace-layout {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+
+        .panel {
+            background: var(--panel-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 24px;
+            border: 1px solid var(--border-pink);
+            box-shadow: var(--shadow-md);
+            margin-bottom: 24px;
+            box-sizing: border-box;
+        }
+
+        .panel-title {
             margin: 0 0 20px 0;
+            font-size: 1.2rem;
+            font-weight: 700;
             color: #831843;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            border-bottom: 2px solid #fce7f3;
+            padding-bottom: 8px;
         }
 
-        /* Animated Progress Systems */
-        .subject-row { margin-bottom: 20px; }
-        .subject-info {
+        .subject-block {
+            margin-bottom: 20px;
+        }
+
+        .subject-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 8px;
-            font-size: 0.95rem;
-            font-weight: 600;
-        }
-        .subject-name { display: flex; align-items: center; gap: 8px; color: #831843; }
-        .subject-stats { color: var(--text-muted); font-size: 0.85rem; }
-
-        .progress-bar-container {
-            background-color: #ffe4e6;
-            border-radius: 20px;
-            height: 16px;
-            overflow: hidden;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.03);
-        }
-        .progress-bar-fill {
-            height: 100%;
-            width: 0%;
-            border-radius: 20px;
-            transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
-        /* Level Badges */
-        .lvl-badge {
-            background: #fff5f5;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 0.75rem;
+        .subject-identity {
+            display: flex;
+            align-items: center;
+            gap: 8px;
             font-weight: 700;
-            border: 1px solid var(--border-color);
+            font-size: 0.95rem;
+            color: #4c0519;
+        }
+
+        .subject-badge {
+            color: #ffffff;
+            font-size: 0.7rem;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 8px;
+        }
+
+        .subject-counter {
+            font-size: 0.85rem;
+            font-weight: 700;
             color: var(--text-muted);
         }
 
-        /* Fluid Round Capsule Columns Chart */
-        .graph-container {
+        .bar-container {
+            background: #ffe4e6;
+            border-radius: 9999px;
+            height: 16px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: 9999px;
+            transition: width 0.8s ease-out;
+        }
+
+        .visual-chart-box {
             display: flex;
             justify-content: space-around;
             align-items: flex-end;
             height: 160px;
-            padding-top: 25px;
-            border-bottom: 2px solid var(--border-color);
-            margin-bottom: 10px;
+            padding-top: 16px;
+            border-bottom: 2px dashed var(--border-pink);
+            margin-bottom: 12px;
         }
-        .graph-column {
+
+        .chart-column {
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 55px;
+            width: 60px;
         }
-        .graph-bar {
+
+        .chart-pillar {
             width: 100%;
-            background-color: #fbcfe8;
-            border-radius: 30px 30px 0 0;
             height: 0%;
-            transition: height 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border-radius: 8px 8px 0 0;
             display: flex;
             justify-content: center;
             align-items: flex-start;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: height 0.8s ease-out;
         }
-        .graph-bar-label {
+
+        .chart-percentage-lbl {
             font-size: 0.75rem;
             color: #ffffff;
-            font-weight: 700;
-            margin-top: 6px;
+            font-weight: 800;
+            margin-top: 4px;
         }
-        .graph-name { font-size: 0.85rem; font-weight: 700; margin-top: 8px; color: #831843; }
 
-        /* Bouncy Premium Inputs */
-        .input-group {
+        .chart-label-name {
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-top: 8px;
+            color: #831843;
+        }
+
+        .form-grid {
             display: grid;
-            grid-template-columns: 1fr;
+            grid-template-columns: 1fr 1fr;
             gap: 12px;
             margin-bottom: 16px;
         }
-        @media (min-width: 480px) {
-            .input-group { grid-template-columns: 1fr 1fr; }
+
+        .form-field {
+            display: flex;
+            flex-direction: column;
         }
-        label { display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 6px; color: #9d174d; }
-        select, input {
-            width: 100%;
+
+        .form-field label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+
+        .form-field input, .form-field select {
             padding: 12px;
-            border: 2px solid var(--border-color);
-            border-radius: 14px;
-            box-sizing: border-box;
-            font-size: 0.95rem;
-            background-color: #fff9f9;
-            color: #4c0519;
+            border: 1px solid var(--border-pink);
+            border-radius: 12px;
+            font-size: 0.9rem;
+            color: var(--text-main);
+            background-color: #ffffff;
             font-weight: 600;
-            transition: all 0.2s ease;
+            box-sizing: border-box;
+            width: 100%;
         }
-        select:focus, input:focus {
+
+        .form-field input:focus, .form-field select:focus {
             outline: none;
             border-color: var(--fr-color);
-            background-color: #ffffff;
-            box-shadow: 0 0 0 4px rgba(236, 72, 153, 0.15);
+            box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.2);
         }
-        
-        /* Animated Submit Button */
-        button.submit-btn {
+
+        button.action-btn {
             width: 100%;
             padding: 14px;
             background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
-            color: white;
+            color: #ffffff;
             border: none;
-            border-radius: 14px;
+            border-radius: 12px;
+            font-size: 0.95rem;
             font-weight: 700;
             cursor: pointer;
-            font-size: 1rem;
-            box-shadow: 0 5px 15px rgba(236, 72, 153, 0.3);
-            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-        }
-        button.submit-btn:hover { 
-            transform: scale(1.02);
-            box-shadow: 0 7px 20px rgba(236, 72, 153, 0.4);
-        }
-        button.submit-btn:active { transform: scale(0.98); }
-
-        /* Log Table Feed */
-        .table-container { max-height: 220px; overflow-y: auto; margin-top: 10px; border-radius: 12px; }
-        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
-        th, td { padding: 12px 10px; border-bottom: 1px solid #ffe4e6; }
-        th { background-color: #ffe4e6; font-weight: 700; color: #831843; position: sticky; top: 0; }
-        td { color: #4c0519; font-weight: 500; }
-        .delete-btn { background: none; border: none; color: #f43f5e; cursor: pointer; font-size: 1.3rem; padding: 0; line-height: 1; transition: transform 0.2s; }
-        .delete-btn:hover { transform: scale(1.2); }
-        .badge { padding: 3px 8px; border-radius: 8px; color: white; font-size: 0.75rem; font-weight: bold; }
-
-        /* Confetti Burst Particle Elements */
-        .particle {
-            position: absolute;
-            pointer-events: none;
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            animation: explode 0.6s ease-out forwards;
-            opacity: 0;
+            box-shadow: 0 4px 14px rgba(219, 39, 119, 0.3);
+            transition: all 0.2s ease;
         }
 
-        /* Visual Animations Layout */
-        @keyframes explode {
-            0% { transform: translate(0, 0) scale(1); opacity: 1; }
-            100% { transform: translate(var(--x), var(--y)) scale(0); opacity: 0; }
+        button.action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(219, 39, 119, 0.45);
         }
-        @keyframes fadeInDown {
-            0% { opacity: 0; transform: translateY(-20px); }
-            100% { opacity: 1; transform: translateY(0); }
+
+        .table-scroller {
+            max-height: 200px;
+            overflow-y: auto;
+            border-radius: 12px;
+            border: 1px solid var(--border-pink);
         }
-        @keyframes fadeInUp {
-            0% { opacity: 0; transform: translateY(20px); }
-            100% { opacity: 1; transform: translateY(0); }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+
+        th {
+            background-color: #ffe4e6;
+            color: #831843;
+            font-weight: 700;
+            padding: 12px 10px;
+            position: sticky;
+            top: 0;
+        }
+
+        td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #fce7f3;
+            background: #ffffff;
+            font-weight: 600;
+        }
+
+        .remove-row-btn {
+            background: none;
+            border: none;
+            color: #f43f5e;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
 
-<div class="dashboard-container">
+<div class="app-container">
     <header>
-        <h1>🎀 My CA Final Progress Hub 🎀</h1>
-        <p class="deadline">🎯 Final Deadline: 31 December</p>
+        <h1>🌸 My CA Final Progress Hub 🌸</h1>
+        <p>🎯 Final Deadline: 31 December</p>
     </header>
 
-    <!-- Top Floating Analytics Widget -->
-    <div class="countdown-widget">
-        <div style="font-size: 1rem; font-weight: 700; letter-spacing: 0.5px;">✨ DAYS TO GO COUNTDOWN & DAILY TARGETS ✨</div>
-        <div class="countdown-grid">
-            <div class="countdown-item">
-                <div class="countdown-num" id="days-left">0</div>
-                <div class="countdown-label">Days Left</div>
+    <!-- Top Dashboard Banner Summary -->
+    <div class="metrics-banner">
+        <div class="metrics-banner-title">✨ Days to Go Countdown & Daily Targets ✨</div>
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-value" id="days-left">0</div>
+                <div class="metric-label">Days Left</div>
             </div>
-            <div class="countdown-item">
+            <div class="metric-card">
+                <div class="metric-value" id="hours-left">0.0</div>
+                <div class="metric-label">Hours Left</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="daily-pace" style="color: #fef08a;">0.00</div>
+                <div class="metric-label">Hrs / Day Needed</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Side-by-Side Area -->
+    <div class="workspace-layout">
+        
+        <!-- Left Column: Progress Metrics -->
+        <div>
+            <div class="panel">
+                <h2 class="panel-title">📊 Subject wise Progress Metrics</h2>
+                
+                <div class="subject-block">
+                    <div class="subject-header">
